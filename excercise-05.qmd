@@ -1,0 +1,171 @@
+---
+title: "excercise-05"
+author: "Joyradyn"
+format: html
+editor: visual
+---
+
+## Challenge 1
+
+Step 1:
+```{r}
+library(tidyverse)
+
+f <- "https://raw.githubusercontent.com/difiore/ada-datasets/main/IMDB-movies.csv"
+d <- read_csv(f, col_names = TRUE)
+```
+
+Step 2:
+```{r}
+d <- d |>
+  arrange(startYear) |>
+  filter(startYear >= 1920 & startYear <= 1979, na.rm = TRUE) |>
+  filter(runtimeMinutes >= 60 & runtimeMinutes <=180, na.rm = TRUE) |>
+  mutate(decades = paste0(substr(as.character(startYear), 3, 3), "0s"))
+```
+
+Step 3:
+```{r}
+p <- ggplot(data = d, aes( x = (runtimeMinutes))) +
+  geom_histogram(fill = "pink", color = "pink", bins = 50) +
+  facet_wrap(~decades, ncol = 3) +
+  theme(legend.position = "none")
+```
+
+Step 4:
+```{r}
+results <- d |>
+  group_by(decades) |>
+  summarise(rm_mean = mean(runtimeMinutes, na.rm = TRUE), 
+            rm_sd = sd(runtimeMinutes, na.rm = TRUE))
+```
+
+Step 5:
+```{r}
+sample <- d |>
+  group_by(decades) |>                         
+  slice_sample(n = 100, replace = FALSE) |>
+  summarise(
+    rm_mean = mean(runtimeMinutes, na.rm = TRUE),
+    rm_sd = sd(runtimeMinutes, na.rm = TRUE)
+  )
+```
+
+Step 6:
+```{r}
+sample_se <- sample |>
+  mutate(rm_se = rm_sd/sqrt(100))
+```
+
+Step 7:
+```{r}
+results_se <- results |>
+  mutate(rm_se = rm_sd/sqrt(100))
+
+combined <- results_se |>
+  left_join(sample_se, by = "decades", suffix = c("_results", "_sample"))
+
+comparison <- combined |> 
+  mutate(
+    mean_diff = abs(rm_mean_sample - rm_mean_results),
+    se_diff = abs(rm_se_sample - rm_se_results)) |>
+  select(decades, mean_diff, se_diff)
+```
+
+Step 8:
+```{r}
+sample_distribution <- d |>
+  rep_slice_sample(n = 100, reps = 1000)
+
+s_dist <- sample_distribution |>
+  group_by(decades) |>
+  summarise(
+    rm_mean = mean(runtimeMinutes, na.rm = TRUE),
+    rm_sd = sd(runtimeMinutes, na.rm = TRUE)
+  )
+```
+
+Step 9:
+```{r}
+s_dist_se <- s_dist |>
+  mutate(rm_se = rm_sd/sqrt(100))
+
+p2 <- ggplot(data = sample_distribution, aes( x = (runtimeMinutes))) +
+  geom_histogram(fill = "blue", color = "blue", bins = 50) +
+  facet_wrap(~decades, ncol = 3) +
+  theme(legend.position = "none")
+```
+
+Step 10:
+```{r}
+combined2 <- s_dist_se |>
+  left_join(sample_se, by = "decades", suffix = c("_dist", "_sample"))
+
+comparison2 <- combined2 |> 
+  mutate(
+    mean_diff = abs(rm_mean_sample - rm_mean_dist),
+    se_diff = abs(rm_se_sample - rm_se_dist)) |>
+  select(decades, mean_diff, se_diff)
+```
+
+## Challenge 2
+
+Step 1:
+```{r}
+r <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/zombies.csv"
+z <- read_csv(r, col_names = TRUE)
+```
+
+Step 2:
+```{r}
+
+
+```
+
+Step 3:
+```{r}
+
+
+```
+
+Step 4:
+```{r}
+
+
+```
+
+Step 5:
+```{r}
+
+
+```
+
+Step 6:
+```{r}
+
+
+```
+
+Step 7:
+```{r}
+
+
+```
+
+Step 8:
+```{r}
+
+
+```
+
+Step 9:
+```{r}
+
+
+```
+
+Step 10:
+```{r}
+
+
+```
