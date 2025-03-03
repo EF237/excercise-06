@@ -7,16 +7,19 @@ editor: visual
 
 ## Challenge 1
 
-Step 1:
-```{r}
+**Step 1:** Load the necessary dataset as a tibble.
+
+```{r echo=TRUE, results="hide", message=FALSE, warning=FALSE}
 library(tidyverse)
+library(ggplot2)
 
 f <- "https://raw.githubusercontent.com/difiore/ada-datasets/main/IMDB-movies.csv"
 d <- read_csv(f, col_names = TRUE)
 ```
 
-Step 2:
-```{r}
+**Step 2:** A single-line statement to filter movies released between 1920 and 1979 while creating a new decade column.
+
+```{r echo=TRUE, results="hide"}
 d <- d |>
   arrange(startYear) |>
   filter(startYear >= 1920 & startYear <= 1979, na.rm = TRUE) |>
@@ -24,147 +27,195 @@ d <- d |>
   mutate(decades = paste0(substr(as.character(startYear), 3, 3), "0s"))
 ```
 
-Step 3:
+**Step 3:** Use ggplot2 to plot histograms of runtimeMinutes for each decade.
+
 ```{r}
-p <- ggplot(data = d, aes( x = (runtimeMinutes))) +
+plot_1 <- ggplot(data = d, aes( x = (runtimeMinutes))) +
   geom_histogram(fill = "pink", color = "pink", bins = 50) +
   facet_wrap(~decades, ncol = 3) +
   theme(legend.position = "none")
+
+print(plot_1)
 ```
 
-Step 4:
+***Step 4:*** A single-line statement to compute the population mean and standard deviation of runtimeMinutes for each decade and store the results in a new dataframe called results.`(results)`
+
 ```{r}
 results <- d |>
   group_by(decades) |>
-  summarise(rm_mean = mean(runtimeMinutes, na.rm = TRUE), 
-            rm_sd = sd(runtimeMinutes, na.rm = TRUE))
+  summarise(runtimeMinutes_mean = mean(runtimeMinutes, na.rm = TRUE), 
+            runtimeMinutes_sd = sd(runtimeMinutes, na.rm = TRUE))
+
+print(results)
 ```
 
-Step 5:
+**Step 5:** Draw a random sample of 100 movies per decade without replacement and compute the sample mean and standard deviation of runtimeMinutes. `(single_sample)`
+
 ```{r}
-sample <- d |>
+single_sample <- d |>
   group_by(decades) |>                         
   slice_sample(n = 100, replace = FALSE) |>
   summarise(
-    rm_mean = mean(runtimeMinutes, na.rm = TRUE),
-    rm_sd = sd(runtimeMinutes, na.rm = TRUE)
+    runtimeMinutes_mean = mean(runtimeMinutes, na.rm = TRUE),
+    runtimeMinutes_sd = sd(runtimeMinutes, na.rm = TRUE)
   )
+
+print(single_sample)
 ```
 
-Step 6:
+**Step 6:** Calculate the standard error of the population mean runtimeMinutes for each decade using the sample standard deviation and n = 100. `(single_sample_se)`
+
 ```{r}
-sample_se <- sample |>
-  mutate(rm_se = rm_sd/sqrt(100))
+single_sample_se <- single_sample |>
+  mutate(runtimeMinutes_se = runtimeMinutes_sd/sqrt(100)) |>
+  select(decades, runtimeMinutes_se)
+
+print(single_sample_se)
 ```
 
-Step 7:
+**Step 7:** Compare sample mean estimates to the actual population mean and the SE based on the population standard deviation for samples of size 100 per decade. `(comparison)`
+
 ```{r}
 results_se <- results |>
-  mutate(rm_se = rm_sd/sqrt(100))
+  mutate(runtimeMinutes_se = runtimeMinutes_sd/sqrt(100))
 
 combined <- results_se |>
-  left_join(sample_se, by = "decades", suffix = c("_results", "_sample"))
+  left_join(single_sample_se, by = "decades", suffix = c("_results", "_sample"))
 
 comparison <- combined |> 
-  mutate(
-    mean_diff = abs(rm_mean_sample - rm_mean_results),
-    se_diff = abs(rm_se_sample - rm_se_results)) |>
-  select(decades, mean_diff, se_diff)
+  select(decades, runtimeMinutes_se_results, runtimeMinutes_se_sample)
+
+print(comparison)
 ```
 
-Step 8:
-```{r}
-sample_distribution <- d |>
+**Step 8:** Generate a sampling distribution of mean runtimeMinutes for each decade by drawing 1000 random samples of 100 movies without replacement, then calculate the mean and standard deviation for each sample. `(sample_distribution)`
+
+```{r echo=TRUE, results="hide"}
+library(infer)
+
+sd <- d |>
   rep_slice_sample(n = 100, reps = 1000)
 
-s_dist <- sample_distribution |>
-  group_by(decades) |>
+sample_distribution <- sd |>
+  group_by(replicate, decades) |>
   summarise(
-    rm_mean = mean(runtimeMinutes, na.rm = TRUE),
-    rm_sd = sd(runtimeMinutes, na.rm = TRUE)
+    runtimeMinutes_mean = mean(runtimeMinutes, na.rm = TRUE),
+    runtimeMinutes_sd = sd(runtimeMinutes, na.rm = TRUE)
   )
 ```
 
-Step 9:
-```{r}
-s_dist_se <- s_dist |>
-  mutate(rm_se = rm_sd/sqrt(100))
+**Step 9:** Calculate the mean and standard deviation of the sampling distribution of sample means for each decade, then plot a histogram for each decade. The mean should estimate the population mean, and the standard deviation estimates the standard error for that sample size.
 
-p2 <- ggplot(data = sample_distribution, aes( x = (runtimeMinutes))) +
+**Bonus Question: What shape does it have?** *The shape is similar to that of a normal distribution curve.*
+
+```{r}
+sample_distribution_se <- sample_distribution |>
+  mutate(runtimeMinutes_se = runtimeMinutes_sd/sqrt(100))
+
+plot_2 <- ggplot(data = sample_distribution, aes( x = (runtimeMinutes_mean))) +
   geom_histogram(fill = "blue", color = "blue", bins = 50) +
   facet_wrap(~decades, ncol = 3) +
   theme(legend.position = "none")
+
+print(plot_2)
 ```
 
-Step 10:
-```{r}
-combined2 <- s_dist_se |>
-  left_join(sample_se, by = "decades", suffix = c("_dist", "_sample"))
+**Step 10:** Compare the standard error in runtimeMinutes for samples of size 100 from each decade, using: \[1\] the first sample of 100 movies, \[2\] the known population standard deviations, and \[3\] the sampling distribution of sample means for each decade. `(comparison_2)`
 
-comparison2 <- combined2 |> 
-  mutate(
-    mean_diff = abs(rm_mean_sample - rm_mean_dist),
-    se_diff = abs(rm_se_sample - rm_se_dist)) |>
-  select(decades, mean_diff, se_diff)
+```{r}
+sample_distribution_se_solidified <- sample_distribution_se |>
+  group_by(decades) |>
+  summarise(runtimeMinutes_se = mean(runtimeMinutes_se, na.rm = TRUE))
+
+combined_2 <- sample_distribution_se_solidified |>
+  left_join(single_sample_se, by = "decades", suffix = c("_distribution", "_sample"))
+
+comparison_2 <- combined_2 |> 
+  select(decades, runtimeMinutes_se_distribution, runtimeMinutes_se_sample)
+
+print(comparison_2)
 ```
 
 ## Challenge 2
 
-Step 1:
-```{r}
+**Step 1:** Load the necessary dataset as a tibble.
+
+```{r echo=TRUE, results="hide", message=FALSE, warning=FALSE}
 r <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/zombies.csv"
 z <- read_csv(r, col_names = TRUE)
 ```
 
-Step 2:
+**Step 2:** Calculate the population mean and standard deviation for each quantitative random variable in the dataset (height, weight, age, number of zombies killed, and years of education). `(zombie.world)`
+
+```{r}
+zombie.world <- z |>
+  summarise(height_mean = mean(height, na.rm = TRUE), 
+            height_sd = sd(height, na.rm = TRUE),
+            weight_mean = mean(weight, na.rm = TRUE), 
+            weight_sd = sd(weight, na.rm = TRUE),
+            age_mean = mean(age, na.rm = TRUE), 
+            age_sd = sd(age, na.rm = TRUE),
+            zombies_killed_mean = mean(zombies_killed, na.rm = TRUE), 
+            zombies_killed_sd = sd(zombies_killed, na.rm = TRUE),
+            years_of_education_mean = mean(years_of_education, na.rm = TRUE), 
+            years_of_education_sd = sd(years_of_education, na.rm = TRUE),
+            )
+
+print(zombie.world)
+
+```
+
+**Step 3:**
+
 ```{r}
 
 
 ```
 
-Step 3:
+**Step 4:**
+
 ```{r}
 
 
 ```
 
-Step 4:
+**Step 5:**
+
 ```{r}
 
 
 ```
 
-Step 5:
+**Step 6:**
+
 ```{r}
 
 
 ```
 
-Step 6:
+**Step 7:**
+
 ```{r}
 
 
 ```
 
-Step 7:
+**Step 8:**
+
 ```{r}
 
 
 ```
 
-Step 8:
+**Step 9:**
+
 ```{r}
 
 
 ```
 
-Step 9:
-```{r}
+**Step 10:**
 
-
-```
-
-Step 10:
 ```{r}
 
 
