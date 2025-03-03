@@ -143,6 +143,9 @@ print(comparison_2)
 ```{r echo=TRUE, results="hide", message=FALSE, warning=FALSE}
 r <- "https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/zombies.csv"
 z <- read_csv(r, col_names = TRUE)
+
+library(gridExtra)
+library(infer)
 ```
 
 **Step 2:** Calculate the population mean and standard deviation for each quantitative random variable in the dataset (height, weight, age, number of zombies killed, and years of education). `(zombie.world)`
@@ -165,56 +168,223 @@ print(zombie.world)
 
 ```
 
-**Step 3:**
+**Step 3:**Use {ggplot} and make boxplots of each of these variables by gender.
 
 ```{r}
+b1 <- ggplot(z, aes(x = gender, y = weight, fill = gender)) +
+  geom_boxplot(alpha = 1, outlier.shape = NA) +
+  labs(title = "Weight by Gender", x = "Gender", y = "Weight") +
+  theme(legend.position = "none")
 
+b2 <- ggplot(z, aes(x = gender, y = height, fill = gender)) +
+  geom_boxplot(alpha = 1, outlier.shape = NA) +
+  labs(title = "Height by Gender", x = "Gender", y = "Height") +
+  theme(legend.position = "none")
+
+b3 <- ggplot(z, aes(x = gender, y = age, fill = gender)) +
+  geom_boxplot(alpha = 1, outlier.shape = NA) +
+  labs(title = "Age by Gender", x = "Gender", y = "Age") +
+  theme(legend.position = "none")
+
+b4 <- ggplot(z, aes(x = gender, y = years_of_education, fill = gender)) +
+  geom_boxplot(alpha = 1, outlier.shape = NA) +
+  labs(title = "Years of Education by Gender", x = "Gender", y = "Years of Education") +
+  theme(legend.position = "none")
+
+b5 <- ggplot(z, aes(x = gender, y = zombies_killed, fill = gender)) +
+  geom_boxplot(alpha = 1, outlier.shape = NA) +
+  labs(title = "Zombies Killed by Gender", x = "Gender", y = "Zombies Killed") +
+  theme(legend.position = "none")
+
+grid.arrange(b1, b2, b3, b4, b5, ncol = 2)
 
 ```
 
-**Step 4:**
+**Step 4:**Use {ggplot} to create scatterplots of height and weight vs. age, with different colors for males and females.
 
 ```{r}
 
+s1 <- ggplot(z, aes(x = age, y = height, color = gender)) +
+  geom_point(alpha = 1, size = 1) + 
+  labs(title = "Height vs. Age", x = "Age", y = "Height (cm)", color = "Gender") +
+  scale_color_manual(values = c("pink", "blue"))
+
+s2 <- ggplot(z, aes(x = age, y = weight, color = gender)) +
+  geom_point(alpha = 1, size = 1) +
+  labs(title = "Weight vs. Age", x = "Age", y = "Weight (kg)", color = "Gender") +
+  scale_color_manual(values = c("pink", "blue"))  
+
+grid.arrange(s1, s2, ncol = 2)
 
 ```
 
 **Step 5:**
 
+Use {ggplot} and make histograms.
+
 ```{r}
+h1 <- ggplot(z, aes(x = weight)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Weight", x = "Weight", y = "Density")
+
+h2 <- ggplot(z, aes(x = height)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Height", x = "Height", y = "Density")
+
+h3 <- ggplot(z, aes(x = age)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Age", x = "Age", y = "Density")
+
+h4 <- ggplot(z, aes(x = years_of_education)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Years Of Education", x = "Years Of Education", y = "Density")
+
+h5 <- ggplot(z, aes(x = zombies_killed)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Zombies Killed", x = "Zombies Killed", y = "Density")
+
+grid.arrange(h1, h2, h3, h4, h5, ncol = 2)
+
+```
+
+Use {ggplot} and make Q-Q plots.
+
+```{r}
+q1 <- ggplot(z, aes(sample = weight)) +  
+  stat_qq(size = 2, alpha = 1) +    
+  stat_qq_line(color = "red", size = 1) +  
+  labs(title = "Q-Q Plot of Weight", x = "Theoretical Quantiles", y = "Sample Quantiles")
+
+q2 <- ggplot(z, aes(sample = height)) +  
+  stat_qq(size = 2, alpha = 1) +    
+  stat_qq_line(color = "red", size = 1) +
+  labs(title = "Q-Q Plot of Height", x = "Theoretical Quantiles", y = "Sample Quantiles")
+
+q3 <- ggplot(z, aes(sample = age)) +  
+  stat_qq(size = 2, alpha = 1) +    
+  stat_qq_line(color = "red", size = 1) +  
+  labs(title = "Q-Q Plot of Age", x = "Theoretical Quantiles", y = "Sample Quantiles")
+
+q4 <- ggplot(z, aes(sample = years_of_education)) +  
+  stat_qq(size = 2, alpha = 1) +    
+  stat_qq_line(color = "red", size = 1) +  
+  labs(title = "Q-Q Plot of Years of Education", x = "Theoretical Quantiles", y = "Sample Quantiles")
+
+q5 <- ggplot(z, aes(sample = zombies_killed)) +  
+  stat_qq(size = 2, alpha = 1) +    
+  stat_qq_line(color = "red", size = 1) +  
+  labs(title = "Q-Q Plot of Zombies Killed", x = "Theoretical Quantiles", y = "Sample Quantiles")
+
+grid.arrange(q1, q2, q3, q4, q5, ncol = 2)
+```
+
+**Step 6:**Use sample_n() or slice_sample() from {dplyr} to sample one subset of 50 zombie apocalypse survivors (without replacement). Calculate the mean and sample standard deviation for each variable, then estimate the standard error and construct a 95% confidence interval for each mean.
+
+```{r}
+sample_z <- z |>
+  group_by(gender) |>                         
+  slice_sample(n = 50, replace = FALSE) |>
+  summarise(
+    height_mean = mean(height, na.rm = TRUE),
+    height_sd = sd(height, na.rm = TRUE),
+    weight_mean = mean(weight, na.rm = TRUE),
+    weight_sd = sd(weight, na.rm = TRUE),
+    age_mean = mean(age, na.rm = TRUE),
+    age_sd = sd(age, na.rm = TRUE),
+    years_of_education_mean = mean(years_of_education, na.rm = TRUE),
+    years_of_education_sd = sd(years_of_education, na.rm = TRUE),
+    zombies_killed_mean = mean(zombies_killed, na.rm = TRUE),
+    zombies_killed_sd = sd(zombies_killed, na.rm = TRUE)
+  ) |> 
+  mutate(height_se = height_sd/sqrt(100),
+         weight_se = weight_sd/sqrt(100),
+         age_se = age_sd/sqrt(100),
+         years_of_education_se = years_of_education_sd/sqrt(100),
+         zombies_killed_se = zombies_killed_sd/sqrt(100))
+
+print(sample_z)
+
+ci_height <- sample_z$height_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$height_se
+ci_weight <- sample_z$weight_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$weight_se
+ci_age <- sample_z$age_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$age_se
+ci_years_of_education <- sample_z$years_of_education_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$years_of_education_se
+ci_zombies_killed <- sample_z$zombies_killed_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$zombies_killed_se
+
+print(ci_height)
+print(ci_weight)
+print(ci_age)
+print(ci_years_of_education)
+print(ci_zombies_killed)
+
+```
+
+**Step 7:** Then draw another 199 random samples of 50 zombie apocalypse survivors out of the population and calculate the mean for each of the these samples. Together with the first sample you drew out, you now have a set of 200 means for each variable (each of which is based on 50 observations), which constitutes a sampling distribution for each variable.
+
+```{r}
+sample199_z <- z |>
+  rep_slice_sample(n = 50, reps = 199)
+
+sample200_z <- sample199_z |>
+  merge(sample_z) |>
+    summarise(
+    height_mean = mean(height, na.rm = TRUE),
+    height_sd = sd(height, na.rm = TRUE),
+    weight_mean = mean(weight, na.rm = TRUE),
+    weight_sd = sd(weight, na.rm = TRUE),
+    age_mean = mean(age, na.rm = TRUE),
+    age_sd = sd(age, na.rm = TRUE),
+    years_of_education_mean = mean(years_of_education, na.rm = TRUE),
+    years_of_education_sd = sd(years_of_education, na.rm = TRUE),
+    zombies_killed_mean = mean(zombies_killed, na.rm = TRUE),
+    zombies_killed_sd = sd(zombies_killed, na.rm = TRUE)
+  )
 
 
 ```
 
-**Step 6:**
+**Step 8:** Plot the sampling distributions for each variable mean.
 
 ```{r}
-
+# plot_height200 <- ggplot(data = d, aes( x = (height))) +
+#   geom_histogram(fill = "blue", color = "blue", bins = 50) +
+#   theme(legend.position = "none")
+# 
+# plot_weight200 <- ggplot(data = d, aes( x = (weight))) +
+#   geom_histogram(fill = "blue", color = "blue", bins = 50) +
+#   theme(legend.position = "none")
+# 
+# plot_age200 <- ggplot(data = d, aes( x = (age))) +
+#   geom_histogram(fill = "blue", color = "blue", bins = 50) +
+#   theme(legend.position = "none")
+# 
+# plot_years_of_education200 <- ggplot(data = d, aes( x = (years_of_education))) +
+#   geom_histogram(fill = "blue", color = "blue", bins = 50) +
+#   theme(legend.position = "none")
+# 
+# plot_zombies_killed200 <- ggplot(data = d, aes( x = (zombies_killed))) +
+#   geom_histogram(fill = "blue", color = "blue", bins = 50) +
+#   theme(legend.position = "none")
+# 
+# grid.arrange(plot_height200, plot_weight200, plot_age200, plot_years_of_education200, plot_zombies_killed200)
 
 ```
 
-**Step 7:**
+**Step 9:** Construct a 95% confidence interval for each mean directly from the sampling distribution of sample means using the central 95% that distribution (i.e., by setting the lower and upper CI bounds to 2.5% and 97.5% of the way through that distribution).
 
 ```{r}
 
+ci_sample200_z <- quantile(sample200_z, c(0.025, 0.975))
+
+print(ci_sample200_z)
 
 ```
 
-**Step 8:**
-
-```{r}
-
-
-```
-
-**Step 9:**
-
-```{r}
-
-
-```
-
-**Step 10:**
+**Step 10:** Finally, use bootstrapping to generate a 95% confidence interval for each variable mean by resampling 1000 samples, with replacement, from your original sample (i.e., by setting the lower and upper CI bounds to 2.5% and 97.5% of the way through the sampling distribution generated by bootstrapping). 
 
 ```{r}
 

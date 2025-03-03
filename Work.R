@@ -173,7 +173,7 @@ grid.arrange(p1, p2, ncol = 2)
 # step 5 -histogrm / qq
   # histogram
 
-p1 <- ggplot(z, aes(x = weight)) +
+  p1 <- ggplot(z, aes(x = weight)) +
   geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
   geom_density(color = "red", size = 1) +
   labs(title = "Histogram of Weight", x = "Weight", y = "Density")
@@ -209,7 +209,7 @@ q1 <- ggplot(z, aes(sample = weight)) +
 
 q2 <- ggplot(z, aes(sample = height)) +  
   stat_qq(size = 2, alpha = 1) +    
-  stat_qq_line(color = "red", size = 1) +  
+  stat_qq_line(color = "red", size = 1) +
   labs(title = "Q-Q Plot of Height", x = "Theoretical Quantiles", y = "Sample Quantiles")
 
 q3 <- ggplot(z, aes(sample = age)) +  
@@ -245,33 +245,119 @@ sample_z <- z |>
     years_of_education_sd = sd(years_of_education, na.rm = TRUE),
     zombies_killed_mean = mean(zombies_killed, na.rm = TRUE),
     zombies_killed_sd = sd(zombies_killed, na.rm = TRUE)
-  ) 
-
-
-
+  ) |> 
+  mutate(height_se = height_sd/sqrt(100),
+         weight_se = weight_sd/sqrt(100),
+         age_se = age_sd/sqrt(100),
+         years_of_education_se = years_of_education_sd/sqrt(100),
+         zombies_killed_se = zombies_killed_sd/sqrt(100))
 
 print(sample_z)
 
-quantile_z = quantile(sample_z, probs = c(0.025, 0.975))
+ci_height <- sample_z$height_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$height_se
+ci_weight <- sample_z$weight_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$weight_se
+ci_age <- sample_z$age_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$age_se
+ci_years_of_education <- sample_z$years_of_education_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$years_of_education_se
+ci_zombies_killed <- sample_z$zombies_killed_mean + qnorm(c(0.05/2, 1 - 0.05/2))*sample_z$zombies_killed_se
 
-print(quantile_z)
+print(ci_height)
+print(ci_weight)
+print(ci_age)
+print(ci_years_of_education)
+print(ci_zombies_killed)
 
+#######################################################
+sample_z <- z |>
+  group_by(gender) |>                         
+  slice_sample(n = 50, replace = FALSE) 
+
+mean/sd_z <- sample_z |>
+  summarise(
+    height_mean = mean(height, na.rm = TRUE),
+    height_sd = sd(height, na.rm = TRUE),
+    weight_mean = mean(weight, na.rm = TRUE),
+    weight_sd = sd(weight, na.rm = TRUE),
+    age_mean = mean(age, na.rm = TRUE),
+    age_sd = sd(age, na.rm = TRUE),
+    years_of_education_mean = mean(years_of_education, na.rm = TRUE),
+    years_of_education_sd = sd(years_of_education, na.rm = TRUE),
+    zombies_killed_mean = mean(zombies_killed, na.rm = TRUE),
+    zombies_killed_sd = sd(zombies_killed, na.rm = TRUE)
+  ) |> 
+  mutate(height_se = height_sd/sqrt(100),
+         weight_se = weight_sd/sqrt(100),
+         age_se = age_sd/sqrt(100),
+         years_of_education_se = years_of_education_sd/sqrt(100),
+         zombies_killed_se = zombies_killed_sd/sqrt(100))
+
+print(mean/sd_z)
+
+ci_height <- mean/sd_z$height_mean + qnorm(c(0.05/2, 1 - 0.05/2))*mean/sd_z$height_se
+ci_weight <- mean/sd_z$weight_mean + qnorm(c(0.05/2, 1 - 0.05/2))*mean/sd_z$weight_se
+ci_age <- mean/sd_z$age_mean + qnorm(c(0.05/2, 1 - 0.05/2))*mean/sd_z$age_se
+ci_years_of_education <- mean/sd_z$years_of_education_mean + qnorm(c(0.05/2, 1 - 0.05/2))*mean/sd_z$years_of_education_se
+ci_zombies_killed <- mean/sd_z$zombies_killed_mean + qnorm(c(0.05/2, 1 - 0.05/2))*mean/sd_z$zombies_killed_se
+
+print(ci_height)
+print(ci_weight)
+print(ci_age)
+print(ci_years_of_education)
+print(ci_zombies_killed)
+
+
+########################################################
 
 # step 7
+install.packages("infer")
+library(infer)
 
-sample_distribution <- d |>
-  rep_slice_sample(n = 100, reps = 1000, replace = FALSE)
+sample199_z <- z |>
+  rep_slice_sample(n = 50, reps = 199)
 
-s_dist <- sample_distribution |>
-  group_by(replicate, decades) |>
+sample200_z <- sample199_z |>
+  merge(sample_z) |>
   summarise(
-    rm_mean = mean(runtimeMinutes, na.rm = TRUE),
-    rm_sd = sd(runtimeMinutes, na.rm = TRUE),
-    .groups = "drop"
+    height_mean = mean(height, na.rm = TRUE),
+    height_sd = sd(height, na.rm = TRUE),
+    weight_mean = mean(weight, na.rm = TRUE),
+    weight_sd = sd(weight, na.rm = TRUE),
+    age_mean = mean(age, na.rm = TRUE),
+    age_sd = sd(age, na.rm = TRUE),
+    years_of_education_mean = mean(years_of_education, na.rm = TRUE),
+    years_of_education_sd = sd(years_of_education, na.rm = TRUE),
+    zombies_killed_mean = mean(zombies_killed, na.rm = TRUE),
+    zombies_killed_sd = sd(zombies_killed, na.rm = TRUE)
   )
-
 # step 8
 
+plot_height200 <- ggplot(data = sample200_z, aes( x = height_mean)) +
+  geom_density(fill = "blue", alpha = 1) +
+  labs(title = "Sampling Distribution of the Mean",
+       x = "Sample Mean", 
+       y = "Density")
+
+plot_weight200 <- ggplot(sample200_z, aes(x = weight_mean)) +
+  geom_histogram(aes(y = ..density..), bins = 30, fill = "lightgreen", alpha = 1) +
+  geom_density(color = "red", size = 1) +
+  labs(title = "Histogram of Weight", x = "Mean Weight", y = "Density")
+
+plot_weight200 <- ggplot(data = sample200_z, aes( x = weight_mean)) +
+  geom_histogram(fill = "blue", color = "blue", bins = 50) +
+  theme(legend.position = "none")
+
+plot_age200 <- ggplot(data = sample200_z, aes( x = age_mean)) +
+  geom_histogram(fill = "blue", color = "blue", bins = 50) +
+  theme(legend.position = "none")
+
+plot_years_of_education200 <- ggplot(data = sample200_z, aes( x = years_of_education_mean)) +
+  geom_histogram(fill = "blue", color = "blue", bins = 50) +
+  theme(legend.position = "none")
+
+plot_zombies_killed200 <- ggplot(data = sample200_z, aes( x = zombies_killed_mean)) +
+  geom_histogram(fill = "blue", color = "blue", bins = 50) +
+  theme(legend.position = "none")
+
+grid.arrange(plot_height200, plot_weight200, plot_age200, plot_years_of_education200, plot_zombies_killed200, ncol = 2)
 
 
 

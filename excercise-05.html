@@ -172,12 +172,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 6 × 3
   decades runtimeMinutes_mean runtimeMinutes_sd
   &lt;chr&gt;                 &lt;dbl&gt;             &lt;dbl&gt;
-1 20s                    96.5              26.7
-2 30s                    90.3              16.1
-3 40s                    95.7              18.9
-4 50s                    98.5              21.7
-5 60s                   103.               16.6
-6 70s                   105.               18.7</code></pre>
+1 20s                    92.8              25.2
+2 30s                    92.1              17.4
+3 40s                    96.4              20.0
+4 50s                   101.               21.3
+5 60s                   107.               21.3
+6 70s                   103.               16.5</code></pre>
 </div>
 </div>
 <p><strong>Step 6:</strong> Calculate the standard error of the population mean runtimeMinutes for each decade using the sample standard deviation and n = 100. <code>(single_sample_se)</code></p>
@@ -191,12 +191,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 6 × 2
   decades runtimeMinutes_se
   &lt;chr&gt;               &lt;dbl&gt;
-1 20s                  2.67
-2 30s                  1.61
-3 40s                  1.89
-4 50s                  2.17
-5 60s                  1.66
-6 70s                  1.87</code></pre>
+1 20s                  2.52
+2 30s                  1.74
+3 40s                  2.00
+4 50s                  2.13
+5 60s                  2.13
+6 70s                  1.65</code></pre>
 </div>
 </div>
 <p><strong>Step 7:</strong> Compare sample mean estimates to the actual population mean and the SE based on the population standard deviation for samples of size 100 per decade. <code>(comparison)</code></p>
@@ -215,27 +215,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 6 × 3
   decades runtimeMinutes_se_results runtimeMinutes_se_sample
   &lt;chr&gt;                       &lt;dbl&gt;                    &lt;dbl&gt;
-1 20s                          2.62                     2.67
-2 30s                          1.73                     1.61
-3 40s                          1.91                     1.89
-4 50s                          1.92                     2.17
-5 60s                          2.12                     1.66
-6 70s                          1.80                     1.87</code></pre>
+1 20s                          2.62                     2.52
+2 30s                          1.73                     1.74
+3 40s                          1.91                     2.00
+4 50s                          1.92                     2.13
+5 60s                          2.12                     2.13
+6 70s                          1.80                     1.65</code></pre>
 </div>
 </div>
 <p><strong>Step 8:</strong> Generate a sampling distribution of mean runtimeMinutes for each decade by drawing 1000 random samples of 100 movies without replacement, then calculate the mean and standard deviation for each sample. <code>(sample_distribution)</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep_slice_sample</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">reps =</span> <span class="dv">1000</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>sample_distribution <span class="ot">&lt;-</span> sd <span class="sc">|&gt;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(replicate, decades) <span class="sc">|&gt;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtimeMinutes_mean =</span> <span class="fu">mean</span>(runtimeMinutes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtimeMinutes_sd =</span> <span class="fu">sd</span>(runtimeMinutes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'infer' was built under R version 4.2.3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> d <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep_slice_sample</span>(<span class="at">n =</span> <span class="dv">100</span>, <span class="at">reps =</span> <span class="dv">1000</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>sample_distribution <span class="ot">&lt;-</span> sd <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(replicate, decades) <span class="sc">|&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtimeMinutes_mean =</span> <span class="fu">mean</span>(runtimeMinutes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtimeMinutes_sd =</span> <span class="fu">sd</span>(runtimeMinutes, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`summarise()` has grouped output by 'replicate'. You can override using the
 `.groups` argument.</code></pre>
@@ -244,15 +246,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>Step 9:</strong> Calculate the mean and standard deviation of the sampling distribution of sample means for each decade, then plot a histogram for each decade. The mean should estimate the population mean, and the standard deviation estimates the standard error for that sample size.</p>
 <p><strong>Bonus Question: What shape does it have?</strong> <em>The shape is similar to that of a normal distribution curve.</em></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sample_distribution_se <span class="ot">&lt;-</span> sample_distribution <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">runtimeMinutes_se =</span> runtimeMinutes_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plot_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> sample_distribution, <span class="fu">aes</span>( <span class="at">x =</span> (runtimeMinutes_mean))) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>decades, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sample_distribution_se <span class="ot">&lt;-</span> sample_distribution <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">runtimeMinutes_se =</span> runtimeMinutes_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plot_2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> sample_distribution, <span class="fu">aes</span>( <span class="at">x =</span> (runtimeMinutes_mean))) <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill =</span> <span class="st">"blue"</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">bins =</span> <span class="dv">50</span>) <span class="sc">+</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>decades, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plot_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -263,27 +265,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p><strong>Step 10:</strong> Compare the standard error in runtimeMinutes for samples of size 100 from each decade, using: [1] the first sample of 100 movies, [2] the known population standard deviations, and [3] the sampling distribution of sample means for each decade. <code>(comparison_2)</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sample_distribution_se_solidified <span class="ot">&lt;-</span> sample_distribution_se <span class="sc">|&gt;</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(decades) <span class="sc">|&gt;</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">runtimeMinutes_se =</span> <span class="fu">mean</span>(runtimeMinutes_se, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>combined_2 <span class="ot">&lt;-</span> sample_distribution_se_solidified <span class="sc">|&gt;</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(single_sample_se, <span class="at">by =</span> <span class="st">"decades"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_distribution"</span>, <span class="st">"_sample"</span>))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>comparison_2 <span class="ot">&lt;-</span> combined_2 <span class="sc">|&gt;</span> </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(decades, runtimeMinutes_se_distribution, runtimeMinutes_se_sample)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(comparison_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sample_distribution_se_solidified <span class="ot">&lt;-</span> sample_distribution_se <span class="sc">|&gt;</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(decades) <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">runtimeMinutes_se =</span> <span class="fu">mean</span>(runtimeMinutes_se, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>combined_2 <span class="ot">&lt;-</span> sample_distribution_se_solidified <span class="sc">|&gt;</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(single_sample_se, <span class="at">by =</span> <span class="st">"decades"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_distribution"</span>, <span class="st">"_sample"</span>))</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>comparison_2 <span class="ot">&lt;-</span> combined_2 <span class="sc">|&gt;</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(decades, runtimeMinutes_se_distribution, runtimeMinutes_se_sample)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(comparison_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 3
   decades runtimeMinutes_se_distribution runtimeMinutes_se_sample
   &lt;chr&gt;                            &lt;dbl&gt;                    &lt;dbl&gt;
-1 20s                               2.30                     2.67
-2 30s                               1.66                     1.61
-3 40s                               1.86                     1.89
-4 50s                               1.88                     2.17
-5 60s                               2.08                     1.66
-6 70s                               1.75                     1.87</code></pre>
+1 20s                               2.22                     2.52
+2 30s                               1.62                     1.74
+3 40s                               1.87                     2.00
+4 50s                               1.85                     2.13
+5 60s                               2.09                     2.13
+6 70s                               1.77                     1.65</code></pre>
 </div>
 </div>
 </section>
@@ -291,25 +293,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="challenge-2">Challenge 2</h2>
 <p><strong>Step 1:</strong> Load the necessary dataset as a tibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/zombies.csv"</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(r, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/refs/heads/main/zombies.csv"</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(r, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gridExtra)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(infer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Step 2:</strong> Calculate the population mean and standard deviation for each quantitative random variable in the dataset (height, weight, age, number of zombies killed, and years of education). <code>(zombie.world)</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>zombie.world <span class="ot">&lt;-</span> z <span class="sc">|&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">height_mean =</span> <span class="fu">mean</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">height_sd =</span> <span class="fu">sd</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">weight_mean =</span> <span class="fu">mean</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">weight_sd =</span> <span class="fu">sd</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_mean =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_sd =</span> <span class="fu">sd</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">zombies_killed_mean =</span> <span class="fu">mean</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">zombies_killed_sd =</span> <span class="fu">sd</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">years_of_education_mean =</span> <span class="fu">mean</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">years_of_education_sd =</span> <span class="fu">sd</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zombie.world)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>zombie.world <span class="ot">&lt;-</span> z <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">height_mean =</span> <span class="fu">mean</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">height_sd =</span> <span class="fu">sd</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">weight_mean =</span> <span class="fu">mean</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">weight_sd =</span> <span class="fu">sd</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_mean =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">age_sd =</span> <span class="fu">sd</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">zombies_killed_mean =</span> <span class="fu">mean</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">zombies_killed_sd =</span> <span class="fu">sd</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">years_of_education_mean =</span> <span class="fu">mean</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">years_of_education_sd =</span> <span class="fu">sd</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(zombie.world)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   height_mean height_sd weight_mean weight_sd age_mean age_sd
@@ -319,14 +324,262 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 #   years_of_education_mean &lt;dbl&gt;, years_of_education_sd &lt;dbl&gt;</code></pre>
 </div>
 </div>
-<p><strong>Step 3:</strong></p>
-<p><strong>Step 4:</strong></p>
+<p><strong>Step 3:</strong>Use {ggplot} and make boxplots of each of these variables by gender.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>b1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> weight, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weight by Gender"</span>, <span class="at">x =</span> <span class="st">"Gender"</span>, <span class="at">y =</span> <span class="st">"Weight"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>b2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> height, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Height by Gender"</span>, <span class="at">x =</span> <span class="st">"Gender"</span>, <span class="at">y =</span> <span class="st">"Height"</span>) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>b3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> age, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age by Gender"</span>, <span class="at">x =</span> <span class="st">"Gender"</span>, <span class="at">y =</span> <span class="st">"Age"</span>) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>b4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> years_of_education, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Years of Education by Gender"</span>, <span class="at">x =</span> <span class="st">"Gender"</span>, <span class="at">y =</span> <span class="st">"Years of Education"</span>) <span class="sc">+</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>b5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> gender, <span class="at">y =</span> zombies_killed, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Zombies Killed by Gender"</span>, <span class="at">x =</span> <span class="st">"Gender"</span>, <span class="at">y =</span> <span class="st">"Zombies Killed"</span>) <span class="sc">+</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(b1, b2, b3, b4, b5, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="excercise-05_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Step 4:</strong>Use {ggplot} to create scatterplots of height and weight vs.&nbsp;age, with different colors for males and females.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>s1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> height, <span class="at">color =</span> gender)) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Height vs. Age"</span>, <span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Height (cm)"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"pink"</span>, <span class="st">"blue"</span>))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>s2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> weight, <span class="at">color =</span> gender)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Weight vs. Age"</span>, <span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Weight (kg)"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"pink"</span>, <span class="st">"blue"</span>))  </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(s1, s2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="excercise-05_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 <p><strong>Step 5:</strong></p>
-<p><strong>Step 6:</strong></p>
-<p><strong>Step 7:</strong></p>
-<p><strong>Step 8:</strong></p>
-<p><strong>Step 9:</strong></p>
-<p><strong>Step 10:</strong></p>
+<p>Use {ggplot} and make histograms.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>h1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> weight)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Weight"</span>, <span class="at">x =</span> <span class="st">"Weight"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>h2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> height)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Height"</span>, <span class="at">x =</span> <span class="st">"Height"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>h3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Age"</span>, <span class="at">x =</span> <span class="st">"Age"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>h4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> years_of_education)) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Years Of Education"</span>, <span class="at">x =</span> <span class="st">"Years Of Education"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>h5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">x =</span> zombies_killed)) <span class="sc">+</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"lightgreen"</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Histogram of Zombies Killed"</span>, <span class="at">x =</span> <span class="st">"Zombies Killed"</span>, <span class="at">y =</span> <span class="st">"Density"</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(h1, h2, h3, h4, h5, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(density)` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="excercise-05_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Use {ggplot} and make Q-Q plots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">sample =</span> weight)) <span class="sc">+</span>  </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span>    </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span>  </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot of Weight"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample Quantiles"</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>q2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">sample =</span> height)) <span class="sc">+</span>  </span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span>    </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot of Height"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample Quantiles"</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>q3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">sample =</span> age)) <span class="sc">+</span>  </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span>    </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span>  </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot of Age"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample Quantiles"</span>)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>q4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">sample =</span> years_of_education)) <span class="sc">+</span>  </span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span>    </span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span>  </span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot of Years of Education"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample Quantiles"</span>)</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>q5 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(z, <span class="fu">aes</span>(<span class="at">sample =</span> zombies_killed)) <span class="sc">+</span>  </span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">+</span>    </span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span>  </span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Q-Q Plot of Zombies Killed"</span>, <span class="at">x =</span> <span class="st">"Theoretical Quantiles"</span>, <span class="at">y =</span> <span class="st">"Sample Quantiles"</span>)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(q1, q2, q3, q4, q5, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="excercise-05_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Step 6:</strong>Use sample_n() or slice_sample() from {dplyr} to sample one subset of 50 zombie apocalypse survivors (without replacement). Calculate the mean and sample standard deviation for each variable, then estimate the standard error and construct a 95% confidence interval for each mean.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>sample_z <span class="ot">&lt;-</span> z <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gender) <span class="sc">|&gt;</span>                         </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">50</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">height_mean =</span> <span class="fu">mean</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">height_sd =</span> <span class="fu">sd</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">weight_mean =</span> <span class="fu">mean</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">weight_sd =</span> <span class="fu">sd</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_mean =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_sd =</span> <span class="fu">sd</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">years_of_education_mean =</span> <span class="fu">mean</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">years_of_education_sd =</span> <span class="fu">sd</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">zombies_killed_mean =</span> <span class="fu">mean</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">zombies_killed_sd =</span> <span class="fu">sd</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">height_se =</span> height_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>),</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">weight_se =</span> weight_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>),</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>         <span class="at">age_se =</span> age_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>),</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>         <span class="at">years_of_education_se =</span> years_of_education_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>),</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">zombies_killed_se =</span> zombies_killed_sd<span class="sc">/</span><span class="fu">sqrt</span>(<span class="dv">100</span>))</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(sample_z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 16
+  gender height_mean height_sd weight_mean weight_sd age_mean age_sd
+  &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+1 Female        65.2      3.59        134.      15.3     19.4   3.17
+2 Male          68.5      5.08        149.      19.8     19.9   3.65
+# ℹ 9 more variables: years_of_education_mean &lt;dbl&gt;,
+#   years_of_education_sd &lt;dbl&gt;, zombies_killed_mean &lt;dbl&gt;,
+#   zombies_killed_sd &lt;dbl&gt;, height_se &lt;dbl&gt;, weight_se &lt;dbl&gt;, age_se &lt;dbl&gt;,
+#   years_of_education_se &lt;dbl&gt;, zombies_killed_se &lt;dbl&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>ci_height <span class="ot">&lt;-</span> sample_z<span class="sc">$</span>height_mean <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>))<span class="sc">*</span>sample_z<span class="sc">$</span>height_se</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>ci_weight <span class="ot">&lt;-</span> sample_z<span class="sc">$</span>weight_mean <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>))<span class="sc">*</span>sample_z<span class="sc">$</span>weight_se</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>ci_age <span class="ot">&lt;-</span> sample_z<span class="sc">$</span>age_mean <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>))<span class="sc">*</span>sample_z<span class="sc">$</span>age_se</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>ci_years_of_education <span class="ot">&lt;-</span> sample_z<span class="sc">$</span>years_of_education_mean <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>))<span class="sc">*</span>sample_z<span class="sc">$</span>years_of_education_se</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>ci_zombies_killed <span class="ot">&lt;-</span> sample_z<span class="sc">$</span>zombies_killed_mean <span class="sc">+</span> <span class="fu">qnorm</span>(<span class="fu">c</span>(<span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span> <span class="sc">-</span> <span class="fl">0.05</span><span class="sc">/</span><span class="dv">2</span>))<span class="sc">*</span>sample_z<span class="sc">$</span>zombies_killed_se</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 64.48535 69.51852</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 130.9822 152.5346</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_age)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 18.79976 20.57205</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_years_of_education)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.647512 3.706923</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_zombies_killed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.624105 2.965951</code></pre>
+</div>
+</div>
+<p><strong>Step 7:</strong> Then draw another 199 random samples of 50 zombie apocalypse survivors out of the population and calculate the mean for each of the these samples. Together with the first sample you drew out, you now have a set of 200 means for each variable (each of which is based on 50 observations), which constitutes a sampling distribution for each variable.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>sample199_z <span class="ot">&lt;-</span> z <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep_slice_sample</span>(<span class="at">n =</span> <span class="dv">50</span>, <span class="at">reps =</span> <span class="dv">199</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>sample200_z <span class="ot">&lt;-</span> sample199_z <span class="sc">|&gt;</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(sample_z) <span class="sc">|&gt;</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">height_mean =</span> <span class="fu">mean</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">height_sd =</span> <span class="fu">sd</span>(height, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">weight_mean =</span> <span class="fu">mean</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">weight_sd =</span> <span class="fu">sd</span>(weight, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_mean =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">age_sd =</span> <span class="fu">sd</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">years_of_education_mean =</span> <span class="fu">mean</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">years_of_education_sd =</span> <span class="fu">sd</span>(years_of_education, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">zombies_killed_mean =</span> <span class="fu">mean</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">zombies_killed_sd =</span> <span class="fu">sd</span>(zombies_killed, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Step 8:</strong> Plot the sampling distributions for each variable mean.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_height200 &lt;- ggplot(data = d, aes( x = (height))) +</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(fill = "blue", color = "blue", bins = 50) +</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(legend.position = "none")</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_weight200 &lt;- ggplot(data = d, aes( x = (weight))) +</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(fill = "blue", color = "blue", bins = 50) +</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(legend.position = "none")</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_age200 &lt;- ggplot(data = d, aes( x = (age))) +</span></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(fill = "blue", color = "blue", bins = 50) +</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(legend.position = "none")</span></span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_years_of_education200 &lt;- ggplot(data = d, aes( x = (years_of_education))) +</span></span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(fill = "blue", color = "blue", bins = 50) +</span></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(legend.position = "none")</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plot_zombies_killed200 &lt;- ggplot(data = d, aes( x = (zombies_killed))) +</span></span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   geom_histogram(fill = "blue", color = "blue", bins = 50) +</span></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   theme(legend.position = "none")</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a><span class="co"># grid.arrange(plot_height200, plot_weight200, plot_age200, plot_years_of_education200, plot_zombies_killed200)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Step 9:</strong> Construct a 95% confidence interval for each mean directly from the sampling distribution of sample means using the central 95% that distribution (i.e., by setting the lower and upper CI bounds to 2.5% and 97.5% of the way through that distribution).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ci_sample200_z <span class="ot">&lt;-</span> <span class="fu">quantile</span>(sample200_z, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in xtfrm.data.frame(x): cannot xtfrm data frames</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(ci_sample200_z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      2.5%    97.5%
+1 1.684073 126.7443</code></pre>
+</div>
+</div>
+<p><strong>Step 10:</strong> Finally, use bootstrapping to generate a 95% confidence interval for each variable mean by resampling 1000 samples, with replacement, from your original sample (i.e., by setting the lower and upper CI bounds to 2.5% and 97.5% of the way through the sampling distribution generated by bootstrapping).</p>
 </section>
 
 </main>
